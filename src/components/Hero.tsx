@@ -1,10 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-"scripts": {
-  "predeploy": "npm run build",
-  "deploy": "gh-pages -d dist"
-}
 
 export const Hero = () => {
   return <section className="w-full bg-gradient-to-r from-gray-700 to-gray-800 text-white">
