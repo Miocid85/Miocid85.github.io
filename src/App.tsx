@@ -8,6 +8,7 @@ import { About } from './pages/About';
 import Contact from './pages/Contact';
 import Delivery from './pages/Delivery';
 import Consultation from './pages/Consultation';
+import { Design } from './pages/Design';
 
 export function App() {
   return <BrowserRouter>
@@ -22,6 +23,7 @@ export function App() {
           <Route path="/delivery" element={<Delivery />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/consultation" element={<Consultation />} />
+          <Route path="/design" element={<Design />} />
         </Routes>
         <Footer />
       </div>

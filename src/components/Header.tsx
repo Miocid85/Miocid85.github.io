@@ -34,6 +34,9 @@ export const Header = () => {
             <Link to="/contact" className="text-gray-700 hover:text-sky-500 font-medium">
               Контакты
             </Link>
+            <Link to="/design" className="text-gray-700 hover:text-sky-500 font-medium">
+              Проектирование
+            </Link>
           </nav>
           {/* Icons */}
           <div className="flex items-center space-x-4">
@@ -65,6 +68,9 @@ export const Header = () => {
               </Link>
               <Link to="/contact" className="text-gray-700 hover:text-sky-500 font-medium">
                 Контакты
+              </Link>
+              <Link to="/design" className="text-gray-700 hover:text-sky-500 font-medium">
+                Проектирование
               </Link>
             </nav>
           </div>}
