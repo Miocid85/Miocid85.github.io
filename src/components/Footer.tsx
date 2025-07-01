@@ -86,13 +86,13 @@ export const Footer = () => {
               </li>
               <li className="flex items-center">
                 <ClockIcon size={18} className="mr-2 text-sky-400" />
-                <span>Пн-Пт: 9:00-18:00, Сб: 10:00-16:00</span>
+                <span>Пн - Пт: 8:00 до 17:30, Сб: 09:00 до 12:00</span>
               </li>
             </ul>
           </div>
         </div>
         <div className="border-t border-gray-700 mt-8 pt-8 text-sm text-center">
-          <p>&copy; 2023 КубСантехОпт. Все права защищены.</p>
+          <p>&copy; 2021 КубСантехОпт. Все права защищены.</p>
         </div>
       </div>
     </footer>;

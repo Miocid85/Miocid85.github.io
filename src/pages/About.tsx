@@ -8,6 +8,9 @@ export const About = () => {
           <p className="text-xl text-center max-w-3xl mx-auto">
             Ваш надежный партнер в мире отопительного оборудования с 2005 года
           </p>
+          <p className="text-lg text-center max-w-3xl mx-auto mt-4 text-sky-700">
+            Мы не только поставщики оборудования, но можем спроектировать любые инженерные системы. И работаем с клиентами: розница, сотрудничество с монтажниками, оптовая торговля.
+          </p>
         </div>
       </div>
       <div className="container mx-auto px-4 py-12">
