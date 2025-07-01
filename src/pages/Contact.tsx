@@ -4,9 +4,9 @@ const Contact: React.FC = () => {
   return (
     <div className="max-w-2xl mx-auto p-8">
       <h1 className="text-3xl font-bold mb-4">Связаться с нами</h1>
-      <p className="mb-2">Телефон: +7 (999) 123-45-67</p>
-      <p className="mb-2">Email: info@example.com</p>
-      <p className="mb-2">Адрес: г. Москва, ул. Примерная, д. 1</p>
+      <p className="mb-2">Телефон: +7(918)239-37-22</p>
+      <p className="mb-2">Email: info@kub-opt.com</p>
+      <p className="mb-2">Адрес: Г. Краснодар. ул, Аэродромная, Д. 21</p>
       <form className="mt-6 space-y-4">
         <div>
           <label className="block mb-1" htmlFor="name">Имя</label>

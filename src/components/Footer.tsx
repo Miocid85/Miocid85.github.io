@@ -8,7 +8,7 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <img src={logo} alt="КубСантехОпт логотип" className="h-10 w-10 object-contain" />
+              <img src={logo} alt="КубСантехОпт логотип" className="h-20 w-20 object-contain" />
               <h3 className="text-xl font-bold text-white">КубСантехОпт</h3>
             </div>
             <p className="mb-4">
@@ -74,15 +74,15 @@ export const Footer = () => {
             <ul className="space-y-3">
               <li className="flex items-center">
                 <PhoneIcon size={18} className="mr-2 text-sky-400" />
-                <span>+7 (800) 555-35-35</span>
+                <span>+7(918)239-37-22</span>
               </li>
               <li className="flex items-center">
                 <MailIcon size={18} className="mr-2 text-sky-400" />
-                <span>info@kubsantehopt.ru</span>
+                <span>info@kub-opt.com</span>
               </li>
               <li className="flex items-start">
                 <MapPinIcon size={18} className="mr-2 text-sky-400 mt-1" />
-                <span>г. Краснодар, ул. Промышленная, 15</span>
+                <span>Г. Краснодар. ул, Аэродромная, Д. 21</span>
               </li>
               <li className="flex items-center">
                 <ClockIcon size={18} className="mr-2 text-sky-400" />

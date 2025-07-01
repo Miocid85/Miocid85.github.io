@@ -14,7 +14,7 @@ export const Header = () => {
           </button>
           {/* Logo - centered on mobile, left-aligned on desktop */}
           <div className="flex-1 flex justify-center md:justify-start items-center gap-3">
-            <img src={logo} alt="КубСантехОпт логотип" className="h-12 w-12 object-contain" />
+            <img src={logo} alt="КубСантехОпт логотип" className="h-24 w-24 object-contain" />
             <Link to="/" className="text-center md:text-left">
               <h1 className="text-2xl font-bold text-gray-700">КубСантехОпт</h1>
               <p className="text-xs text-gray-500">Отопительное оборудование</p>
