@@ -13,7 +13,7 @@ export const Footer = () => {
             </div>
             <p className="mb-4">
               Ваш надежный поставщик отопительного оборудования и сантехники с
-              2005 года.
+              2021 года.
             </p>
             <div className="flex space-x-4">
               <a href="#" className="hover:text-yellow-500" title="Yandex">
