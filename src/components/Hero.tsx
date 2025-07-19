@@ -58,38 +58,42 @@ const carouselSlides: CarouselSlide[] = [
 
 export const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   // Auto-advance carousel
   useEffect(() => {
+    if (isPaused) return;
+    
     const interval = setInterval(() => {
-      nextSlide();
+      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(interval);
-  }, [currentSlide]);
+  }, [isPaused]);
 
   const nextSlide = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-      setTimeout(() => setIsTransitioning(false), 300);
-    }
+    console.log('Next slide clicked, current:', currentSlide);
+    setIsPaused(true);
+    setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+    // Resume auto-advance after 3 seconds
+    setTimeout(() => setIsPaused(false), 3000);
   };
 
   const prevSlide = () => {
-    if (!isTransitioning) {
-      setIsTransitioning(true);
-      setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
-      setTimeout(() => setIsTransitioning(false), 300);
-    }
+    console.log('Prev slide clicked, current:', currentSlide);
+    setIsPaused(true);
+    setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+    // Resume auto-advance after 3 seconds
+    setTimeout(() => setIsPaused(false), 3000);
   };
 
   const goToSlide = (index: number) => {
-    if (!isTransitioning && index !== currentSlide) {
-      setIsTransitioning(true);
+    console.log('Go to slide clicked, index:', index, 'current:', currentSlide);
+    if (index !== currentSlide) {
+      setIsPaused(true);
       setCurrentSlide(index);
-      setTimeout(() => setIsTransitioning(false), 300);
+      // Resume auto-advance after 3 seconds
+      setTimeout(() => setIsPaused(false), 3000);
     }
   };
 
@@ -169,32 +173,35 @@ export const Hero = () => {
       {/* Navigation Arrows */}
       <button
         onClick={prevSlide}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm z-20 cursor-pointer"
         aria-label="Previous slide"
+        type="button"
       >
         <ChevronLeft size={24} />
       </button>
       
       <button
         onClick={nextSlide}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm z-20 cursor-pointer"
         aria-label="Next slide"
+        type="button"
       >
         <ChevronRight size={24} />
       </button>
 
       {/* Dots Indicator */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3 z-20">
         {carouselSlides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className={`w-3 h-3 rounded-full transition duration-300 ${
+            className={`w-3 h-3 rounded-full transition duration-300 cursor-pointer ${
               index === currentSlide 
                 ? 'bg-white scale-125' 
                 : 'bg-white/50 hover:bg-white/75'
             }`}
             aria-label={`Go to slide ${index + 1}`}
+            type="button"
           />
         ))}
       </div>
