@@ -26,6 +26,16 @@ const carouselSlides: CarouselSlide[] = [
   },
   {
     id: 2,
+    title: 'Проектирование систем',
+    subtitle: 'Отопления и водоснабжения',
+    description: 'Профессиональное проектирование отопительных систем с учетом всех технических требований и норм',
+    image: 'https://images.unsplash.com/photo-1510172951991-856a654063f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    buttonText: 'Заказать проект',
+    buttonLink: '/design',
+    buttonVariant: 'secondary'
+  },
+  {
+    id: 3,
     title: 'Профессиональная установка',
     subtitle: 'И обслуживание',
     description: 'Наши специалисты помогут подобрать и установить отопительное оборудование с гарантией качества',
@@ -35,7 +45,7 @@ const carouselSlides: CarouselSlide[] = [
     buttonVariant: 'secondary'
   },
   {
-    id: 3,
+    id: 4,
     title: 'Доставка по Краснодару',
     subtitle: 'И краю',
     description: 'Быстрая доставка отопительного оборудования по Краснодару и Краснодарскому краю',
