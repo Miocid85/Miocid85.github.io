@@ -26,6 +26,7 @@ interface DesignService {
   icon: React.ReactNode;
   features: string[];
   price: string;
+  image: string;
 }
 
 interface ProcessStep {
@@ -48,7 +49,8 @@ const designServices: DesignService[] = [
       'Автоматизация и управление',
       'Энергоэффективные решения'
     ],
-    price: 'от 50.000₽'
+    price: 'от 50.000₽',
+    image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 2,
@@ -62,7 +64,8 @@ const designServices: DesignService[] = [
       'Системы очистки воды',
       'Горячее водоснабжение'
     ],
-    price: 'от 35.000₽'
+    price: 'от 35.000₽',
+    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 3,
@@ -76,7 +79,8 @@ const designServices: DesignService[] = [
       'Наружные сети',
       'Внутренняя канализация'
     ],
-    price: 'от 30.000₽'
+    price: 'от 30.000₽',
+    image: 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     id: 4,
@@ -90,7 +94,8 @@ const designServices: DesignService[] = [
       'Согласование с надзорными органами',
       'Сопровождение строительства'
     ],
-    price: 'от 150.000₽'
+    price: 'от 150.000₽',
+    image: 'https://images.unsplash.com/photo-1510172951991-856a654063f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   }
 ];
 
@@ -137,22 +142,26 @@ const projectTypes = [
   {
     name: 'Частные дома',
     description: 'Проектирование для коттеджей и загородных домов',
-    icon: <Home className="w-8 h-8" />
+    icon: <Home className="w-8 h-8" />,
+    image: 'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     name: 'Многоквартирные дома',
     description: 'Проектирование для жилых комплексов',
-    icon: <Building className="w-8 h-8" />
+    icon: <Building className="w-8 h-8" />,
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     name: 'Коммерческие объекты',
     description: 'Офисы, магазины, рестораны',
-    icon: <Building className="w-8 h-8" />
+    icon: <Building className="w-8 h-8" />,
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   },
   {
     name: 'Промышленные объекты',
     description: 'Заводы, склады, производственные цеха',
-    icon: <Factory className="w-8 h-8" />
+    icon: <Factory className="w-8 h-8" />,
+    image: 'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'
   }
 ];
 
@@ -162,8 +171,14 @@ export const Design = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20">
-        <div className="container mx-auto px-4 text-center">
+      <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 text-white py-20 overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
+          style={{ 
+            backgroundImage: `url('https://images.unsplash.com/photo-1510172951991-856a654063f9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80')` 
+          }}
+        ></div>
+        <div className="relative z-10 container mx-auto px-4 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Проектирование инженерных систем
           </h1>
@@ -194,12 +209,21 @@ export const Design = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Типы объектов</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {projectTypes.map((type, index) => (
-              <div key={index} className="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-lg transition-shadow">
-                <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4 mx-auto">
-                  <div className="text-blue-600">{type.icon}</div>
+              <div key={index} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={type.image} 
+                    alt={type.name}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{type.name}</h3>
-                <p className="text-gray-600">{type.description}</p>
+                <div className="p-6 text-center">
+                  <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mb-3 mx-auto">
+                    <div className="text-blue-600">{type.icon}</div>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">{type.name}</h3>
+                  <p className="text-gray-600">{type.description}</p>
+                </div>
               </div>
             ))}
           </div>
@@ -212,38 +236,47 @@ export const Design = () => {
             {designServices.map((service, index) => (
               <div
                 key={service.id}
-                className={`bg-white rounded-lg shadow-md p-8 cursor-pointer transition-all duration-300 ${
+                className={`bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-all duration-300 ${
                   selectedService === index
                     ? 'ring-2 ring-blue-500 transform scale-105'
                     : 'hover:shadow-lg hover:transform hover:scale-105'
                 }`}
                 onClick={() => setSelectedService(index)}
               >
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full">
-                    <div className="text-blue-600">{service.icon}</div>
-                  </div>
-                  <div>
-                    <h3 className="text-2xl font-bold">{service.title}</h3>
-                    <p className="text-gray-600">{service.description}</p>
-                  </div>
+                <div className="h-48 overflow-hidden">
+                  <img 
+                    src={service.image} 
+                    alt={service.title}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <div className="mb-6">
-                  <h4 className="text-lg font-semibold mb-3 text-blue-600">Что входит в услугу:</h4>
-                  <ul className="space-y-2">
-                    {service.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600 mb-2">{service.price}</div>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition">
-                    Заказать проект
-                  </button>
+                <div className="p-8">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full">
+                      <div className="text-blue-600">{service.icon}</div>
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold">{service.title}</h3>
+                      <p className="text-gray-600">{service.description}</p>
+                    </div>
+                  </div>
+                  <div className="mb-6">
+                    <h4 className="text-lg font-semibold mb-3 text-blue-600">Что входит в услугу:</h4>
+                    <ul className="space-y-2">
+                      {service.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl font-bold text-blue-600 mb-2">{service.price}</div>
+                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition">
+                      Заказать проект
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -255,15 +288,20 @@ export const Design = () => {
           <h2 className="text-3xl font-bold text-center mb-12">Этапы работы</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {processSteps.map((step, index) => (
-              <div key={step.step} className="bg-white rounded-lg shadow-md p-6 relative">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
-                    <div className="text-blue-600">{step.icon}</div>
-                  </div>
-                  <div className="text-2xl font-bold text-blue-600">Шаг {step.step}</div>
+              <div key={step.step} className="bg-white rounded-lg shadow-md overflow-hidden relative">
+                <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600 flex items-center justify-center">
+                  <div className="text-white text-6xl font-bold opacity-20">{step.step}</div>
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-                <p className="text-gray-600">{step.description}</p>
+                <div className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full">
+                      <div className="text-blue-600">{step.icon}</div>
+                    </div>
+                    <div className="text-2xl font-bold text-blue-600">Шаг {step.step}</div>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
+                  <p className="text-gray-600">{step.description}</p>
+                </div>
                 {index < processSteps.length - 1 && (
                   <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2">
                     <div className="w-8 h-0.5 bg-blue-200"></div>
