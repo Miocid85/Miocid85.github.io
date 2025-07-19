@@ -1,8 +1,10 @@
 {
   "homepage": "https://Miocid85.github.io/Miocid85.github.io",
-  "name": "magic-patterns-vite-template",
-  "version": "0.0.1",
+  "name": "kub-santech-opt-website",
+  "version": "1.0.0",
   "private": true,
+  "description": "Современный веб-сайт компании КубСанТехОпт с интеграцией 1C:Предприятие",
+  "author": "КубСанТехОпт",
   "type": "module",
   "scripts": {
     "dev": "npx vite",
