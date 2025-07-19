@@ -7,6 +7,7 @@ export interface Product {
   price: number;
   image: string;
   category: string;
+  stock?: number;
 }
 interface ProductCardProps {
   product: Product;
@@ -25,10 +26,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {product.description}
         </p>
         <div className="mt-4 flex justify-between items-center">
-          <span className="font-bold text-lg">
-            {product.price.toLocaleString()} ₽
-          </span>
-          <button className="bg-sky-500 hover:bg-sky-600 text-white p-2 rounded-full">
+          <div>
+            <span className="font-bold text-lg">
+              {product.price.toLocaleString()} ₽
+            </span>
+            {product.stock !== undefined && (
+              <div className="text-sm text-gray-500 mt-1">
+                В наличии: {product.stock > 0 ? `${product.stock} шт.` : 'Нет в наличии'}
+              </div>
+            )}
+          </div>
+          <button 
+            className={`p-2 rounded-full ${
+              product.stock && product.stock > 0 
+                ? 'bg-sky-500 hover:bg-sky-600 text-white' 
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={!product.stock || product.stock <= 0}
+          >
             <ShoppingCartIcon size={18} />
           </button>
         </div>
