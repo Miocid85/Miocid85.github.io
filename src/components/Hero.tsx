@@ -1,32 +1,203 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+interface CarouselSlide {
+  id: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  image: string;
+  buttonText: string;
+  buttonLink: string;
+  buttonVariant: 'primary' | 'secondary';
+}
+
+const carouselSlides: CarouselSlide[] = [
+  {
+    id: 1,
+    title: 'Отопительное оборудование',
+    subtitle: 'Для вашего дома',
+    description: 'Широкий выбор труб, радиаторов, теплых полов и комплектующих от ведущих производителей',
+    image: 'https://images.unsplash.com/photo-1621905251918-48416bd8575a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    buttonText: 'Перейти в каталог',
+    buttonLink: '#products',
+    buttonVariant: 'primary'
+  },
+  {
+    id: 2,
+    title: 'Профессиональная установка',
+    subtitle: 'И обслуживание',
+    description: 'Наши специалисты помогут подобрать и установить отопительное оборудование с гарантией качества',
+    image: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    buttonText: 'Получить консультацию',
+    buttonLink: '/consultation',
+    buttonVariant: 'secondary'
+  },
+  {
+    id: 3,
+    title: 'Доставка по Краснодару',
+    subtitle: 'И краю',
+    description: 'Быстрая доставка отопительного оборудования по Краснодару и Краснодарскому краю',
+    image: 'https://images.unsplash.com/photo-1509599589979-3b5a15d2816e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80',
+    buttonText: 'Узнать о доставке',
+    buttonLink: '/delivery',
+    buttonVariant: 'primary'
+  }
+];
 
 export const Hero = () => {
-  return <section className="w-full bg-gradient-to-r from-gray-700 to-gray-800 text-white">
-      <div className="container mx-auto px-4 py-12 md:py-24">
-        <div className="flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 mb-8 md:mb-0">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Отопительное оборудование для вашего дома
-            </h2>
-            <p className="text-lg mb-6">
-              Широкий выбор труб, радиаторов, теплых полов и комплектующих от
-              ведущих производителей
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-white text-gray-700 font-medium py-2 px-6 rounded-md hover:bg-gray-100 transition">
-                Перейти в каталог
-              </button>
-              <Link to="/consultation" className="border border-white text-white font-medium py-2 px-6 rounded-md hover:bg-white/10 transition text-center flex items-center justify-center">
-                Получить консультацию
-              </Link>
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Auto-advance carousel
+  useEffect(() => {
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000); // Change slide every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [currentSlide]);
+
+  const nextSlide = () => {
+    if (!isTransitioning) {
+      setIsTransitioning(true);
+      setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }
+  };
+
+  const prevSlide = () => {
+    if (!isTransitioning) {
+      setIsTransitioning(true);
+      setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }
+  };
+
+  const goToSlide = (index: number) => {
+    if (!isTransitioning && index !== currentSlide) {
+      setIsTransitioning(true);
+      setCurrentSlide(index);
+      setTimeout(() => setIsTransitioning(false), 300);
+    }
+  };
+
+  const currentSlideData = carouselSlides[currentSlide];
+
+  return (
+    <section className="relative w-full h-[600px] overflow-hidden">
+      {/* Carousel Slides */}
+      <div className="relative w-full h-full">
+        {carouselSlides.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            {/* Background Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{ backgroundImage: `url(${slide.image})` }}
+            >
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black/50"></div>
+            </div>
+            
+            {/* Content */}
+            <div className="relative z-10 flex items-center justify-center h-full">
+              <div className="container mx-auto px-4 text-center text-white">
+                <div className="max-w-4xl mx-auto">
+                  <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in">
+                    {slide.title}
+                  </h1>
+                  <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-sky-300 animate-fade-in-delay">
+                    {slide.subtitle}
+                  </h2>
+                  <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto animate-fade-in-delay-2">
+                    {slide.description}
+                  </p>
+                  <div className="animate-fade-in-delay-3">
+                    {slide.buttonVariant === 'primary' ? (
+                      slide.buttonLink === '#products' ? (
+                        <button 
+                          onClick={() => {
+                            const productsSection = document.getElementById('products');
+                            if (productsSection) {
+                              productsSection.scrollIntoView({ behavior: 'smooth' });
+                            }
+                          }}
+                          className="bg-sky-500 hover:bg-sky-600 text-white font-medium py-3 px-8 rounded-md transition duration-300 transform hover:scale-105"
+                        >
+                          {slide.buttonText}
+                        </button>
+                      ) : (
+                        <Link 
+                          to={slide.buttonLink}
+                          className="bg-sky-500 hover:bg-sky-600 text-white font-medium py-3 px-8 rounded-md transition duration-300 transform hover:scale-105 inline-block"
+                        >
+                          {slide.buttonText}
+                        </Link>
+                      )
+                    ) : (
+                      <Link 
+                        to={slide.buttonLink}
+                        className="border-2 border-white text-white font-medium py-3 px-8 rounded-md hover:bg-white hover:text-gray-800 transition duration-300 transform hover:scale-105 inline-block"
+                      >
+                        {slide.buttonText}
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="md:w-1/2">
-            <img src="https://komplekt.com.ua/published/publicdata/S55555CKOMPLEKT2011/attachments/SC/products_pictures/54326659_2zp.jpg" alt="Отопительное оборудование" className="rounded-lg shadow-lg max-h-96 object-cover mx-auto" />
-          </div>
-        </div>
+        ))}
       </div>
-    </section>;
+
+      {/* Navigation Arrows */}
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm"
+        aria-label="Previous slide"
+      >
+        <ChevronLeft size={24} />
+      </button>
+      
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-3 rounded-full transition duration-300 backdrop-blur-sm"
+        aria-label="Next slide"
+      >
+        <ChevronRight size={24} />
+      </button>
+
+      {/* Dots Indicator */}
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex space-x-3">
+        {carouselSlides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => goToSlide(index)}
+            className={`w-3 h-3 rounded-full transition duration-300 ${
+              index === currentSlide 
+                ? 'bg-white scale-125' 
+                : 'bg-white/50 hover:bg-white/75'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Progress Bar */}
+      <div className="absolute bottom-0 left-0 w-full h-1 bg-white/20">
+        <div 
+          className="h-full bg-sky-500 transition-all duration-500 ease-linear"
+          style={{ 
+            width: `${((currentSlide + 1) / carouselSlides.length) * 100}%` 
+          }}
+        />
+      </div>
+    </section>
+  );
 };
