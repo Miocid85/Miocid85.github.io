@@ -1,0 +1,23 @@
+<Products>
+  <Product>
+    <Id>1001</Id>
+    <Name>Котел отопления BAXI</Name>
+    <Price>35000</Price>
+    <Quantity>12</Quantity>
+    <ImageUrl>https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80</ImageUrl>
+  </Product>
+  <Product>
+    <Id>1002</Id>
+    <Name>Радиатор алюминиевый RIFAR</Name>
+    <Price>4200</Price>
+    <Quantity>34</Quantity>
+    <ImageUrl>https://images.unsplash.com/photo-1509599589979-3b5a15d2816e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80</ImageUrl>
+  </Product>
+  <Product>
+    <Id>1003</Id>
+    <Name>Труба полипропиленовая 20мм</Name>
+    <Price>120</Price>
+    <Quantity>200</Quantity>
+    <ImageUrl>https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80</ImageUrl>
+  </Product>
+</Products> 
