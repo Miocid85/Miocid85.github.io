@@ -81,6 +81,7 @@ export const use1CProducts = (category?: string, limit?: number) => {
       }
       
       const xmlText = await response.text();
+      console.log('XML file loaded, size:', xmlText.length, 'characters');
       
       // Parse XML
       const parser = new DOMParser();
@@ -89,7 +90,14 @@ export const use1CProducts = (category?: string, limit?: number) => {
       
       console.log(`Found ${productNodes.length} products in XML`);
       
-      const parsedProducts: ProductXML[] = Array.from(productNodes).map(node => {
+      if (productNodes.length === 0) {
+        console.error('No products found in XML!');
+        setError('No products found in XML file');
+        setLoading(false);
+        return;
+      }
+      
+      const parsedProducts: ProductXML[] = Array.from(productNodes).map((node, index) => {
         const getTextContent = (tagName: string) => {
           const element = node.querySelector(tagName);
           return element ? element.textContent || '' : '';
@@ -110,6 +118,11 @@ export const use1CProducts = (category?: string, limit?: number) => {
 
         // Always use placeholder image since XML has empty ImageUrl tags
         const finalImageUrl = 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
+
+        // Log first few products for debugging
+        if (index < 5) {
+          console.log(`Product ${index + 1}:`, { id, name, price, folder0 });
+        }
 
         return {
           id,
