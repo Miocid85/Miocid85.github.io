@@ -25,10 +25,16 @@ export const use1CProducts = (category?: string, limit?: number) => {
       setLoading(true);
       setError(null);
       
+      console.log('Starting to fetch XML file...');
+      
       // Load XML file from local product directory
       const response = await fetch('/product/product.xml');
       
+      console.log('Fetch response status:', response.status);
+      console.log('Fetch response ok:', response.ok);
+      
       if (!response.ok) {
+        console.error('XML file fetch failed:', response.status, response.statusText);
         console.warn('XML file not found, using fallback data');
         // Use fallback data if XML fails to load
         const fallbackProducts: ProductXML[] = [
@@ -82,16 +88,27 @@ export const use1CProducts = (category?: string, limit?: number) => {
       
       const xmlText = await response.text();
       console.log('XML file loaded, size:', xmlText.length, 'characters');
+      console.log('First 500 characters of XML:', xmlText.substring(0, 500));
       
       // Parse XML
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      
+      // Check for parsing errors
+      const parseError = xmlDoc.querySelector('parsererror');
+      if (parseError) {
+        console.error('XML parsing error:', parseError.textContent);
+        throw new Error('XML parsing failed: ' + parseError.textContent);
+      }
+      
       const productNodes = xmlDoc.querySelectorAll('Product');
       
       console.log(`Found ${productNodes.length} products in XML`);
       
       if (productNodes.length === 0) {
         console.error('No products found in XML!');
+        console.log('XML structure:', xmlDoc.documentElement.tagName);
+        console.log('Available tags:', Array.from(xmlDoc.querySelectorAll('*')).map(el => el.tagName));
         setError('No products found in XML file');
         setLoading(false);
         return;
