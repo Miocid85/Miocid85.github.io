@@ -159,13 +159,11 @@ export const use1CProducts = (category?: string, limit?: number) => {
 
       console.log(`Parsed ${parsedProducts.length} products`);
 
-      // Filter by category if specified
+      // Filter by category if specified - use exact match for folder0
       let filteredProducts = parsedProducts;
       if (category && category !== 'Все товары' && category !== '') {
         filteredProducts = parsedProducts.filter(product => 
-          product.folder0.toLowerCase().includes(category.toLowerCase()) ||
-          product.folder1.toLowerCase().includes(category.toLowerCase()) ||
-          product.folder2.toLowerCase().includes(category.toLowerCase())
+          product.folder0 === category
         );
       }
 
@@ -212,4 +210,67 @@ export const use1CProducts = (category?: string, limit?: number) => {
   }, [fetchProducts]);
 
   return { products, loading, error, refetch };
+};
+
+// New hook to get all categories from all products
+export const use1CCategories = () => {
+  const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      setLoading(true);
+      
+      const response = await fetch('/Miocid85.github.io/product.xml');
+      
+      if (!response.ok) {
+        setCategories([]);
+        setLoading(false);
+        return;
+      }
+      
+      const xmlText = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+      const productNodes = xmlDoc.querySelectorAll('Product');
+      
+      const allProducts: ProductXML[] = Array.from(productNodes).map(node => {
+        const getTextContent = (tagName: string) => {
+          const element = node.querySelector(tagName);
+          return element ? element.textContent || '' : '';
+        };
+
+        return {
+          id: getTextContent('Id'),
+          name: getTextContent('Name'),
+          price: parseFloat(getTextContent('Price')) || 0,
+          quantity: parseFloat(getTextContent('Quantity')) || 0,
+          imageUrl: getTextContent('ImageUrl'),
+          description: getTextContent('Description'),
+          folder0: getTextContent('folder0'),
+          folder1: getTextContent('folder1'),
+          folder2: getTextContent('folder2'),
+          folder3: getTextContent('folder3'),
+          folder4: getTextContent('folder4'),
+          folder5: getTextContent('folder5')
+        };
+      });
+
+      // Get unique categories from all products
+      const uniqueCategories = Array.from(new Set(allProducts.map(p => p.folder0).filter(Boolean)));
+      console.log('All categories found:', uniqueCategories);
+      setCategories(uniqueCategories);
+    } catch (err) {
+      console.error('Error loading categories:', err);
+      setCategories([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
+
+  return { categories, loading };
 }; 

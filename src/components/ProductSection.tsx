@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard, Product } from './ProductCard';
-import { use1CProducts, ProductXML } from '../hooks/use1CData';
+import { use1CProducts, use1CCategories, ProductXML } from '../hooks/use1CData';
 
 export const ProductSection = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory);
+  const { categories: allCategories, loading: categoriesLoading } = use1CCategories();
 
   // Convert XML products to local Product format with safety checks
   const products: Product[] = (products1C || []).map((product: ProductXML) => ({
@@ -18,11 +19,7 @@ export const ProductSection = () => {
     stock: product.quantity || 0
   }));
 
-  // Get unique categories for navigation with safety checks
-  // Always include all categories, not just from filtered products
-  const allCategories = Array.from(new Set((products1C || []).map(p => p.folder0).filter(Boolean)));
-
-  if (loading) {
+  if (loading || categoriesLoading) {
     return (
       <div className="min-h-screen bg-gray-50 py-8">
         <div className="container mx-auto px-4">
