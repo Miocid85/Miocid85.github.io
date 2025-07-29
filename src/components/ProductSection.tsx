@@ -58,7 +58,7 @@ export const ProductSection = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Каталог товаров</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Каталог товаров 5</h1>
           <p className="text-lg text-gray-600">Найдено товаров: {products.length}</p>
         </div>
 
