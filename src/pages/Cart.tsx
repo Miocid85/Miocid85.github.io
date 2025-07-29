@@ -1,15 +1,112 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ShoppingCartIcon, TrashIcon, ArrowLeftIcon, PackageIcon } from 'lucide-react';
+import { ShoppingCartIcon, TrashIcon, ArrowLeftIcon, PackageIcon, CheckCircleIcon } from 'lucide-react';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../hooks/useAuth';
+import { AuthModal } from '../components/AuthModal';
+import { sendOrderNotification, Order } from '../services/emailService';
 
 export const Cart = () => {
   const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalItems, getTotalPrice } = useCart();
+  const { user, isAuthenticated } = useAuth();
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  const [orderSuccess, setOrderSuccess] = useState(false);
+  const [orderId, setOrderId] = useState('');
 
-  const handleCheckout = () => {
-    // Here you would integrate with your order processing system
-    alert('Функция оформления заказа будет добавлена позже');
+  const handleCheckout = async () => {
+    if (!isAuthenticated()) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
+    if (!user) {
+      alert('Ошибка: пользователь не найден');
+      return;
+    }
+
+    setIsProcessingOrder(true);
+
+    try {
+      // Generate order ID
+      const newOrderId = `ORD-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+      setOrderId(newOrderId);
+
+      // Create order object
+      const order: Order = {
+        id: newOrderId,
+        user: {
+          name: user.name,
+          surname: user.surname,
+          patronymic: user.patronymic,
+          email: user.email,
+          phone: user.phone,
+          sector: user.sector
+        },
+        items: cartItems.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          image: item.image
+        })),
+        totalAmount: getTotalPrice(),
+        orderDate: new Date().toLocaleString('ru-RU')
+      };
+
+      // Send email notifications
+      await sendOrderNotification(order);
+
+      // Clear cart after successful order
+      clearCart();
+      
+      // Show success state
+      setOrderSuccess(true);
+
+    } catch (error) {
+      console.error('Error processing order:', error);
+      alert('Произошла ошибка при оформлении заказа. Попробуйте еще раз.');
+    } finally {
+      setIsProcessingOrder(false);
+    }
   };
+
+  const handleAuthSuccess = () => {
+    // After successful authentication, proceed with checkout
+    handleCheckout();
+  };
+
+  if (orderSuccess) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="max-w-md mx-auto text-center">
+            <CheckCircleIcon className="mx-auto h-16 w-16 text-green-500 mb-4" />
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">
+              Заказ оформлен!
+            </h1>
+            <p className="text-lg text-gray-600 mb-6">
+              Номер заказа: <span className="font-semibold">{orderId}</span>
+            </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+              <p className="text-green-800">
+                Спасибо за ваш заказ! Мы отправили подтверждение на ваш email.
+                Наш менеджер свяжется с вами в ближайшее время для уточнения деталей доставки.
+              </p>
+            </div>
+            <div className="space-y-3">
+              <Link
+                to="/"
+                className="block w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
+              >
+                Вернуться к покупкам
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -176,12 +273,35 @@ export const Cart = () => {
                   </div>
                 </div>
 
+                {/* User Info */}
+                {user && (
+                  <div className="mb-6 p-4 bg-blue-50 rounded-md">
+                    <h3 className="text-sm font-medium text-blue-900 mb-2">
+                      Данные для заказа
+                    </h3>
+                    <div className="text-xs text-blue-800 space-y-1">
+                      <p><strong>Имя:</strong> {user.surname} {user.name} {user.patronymic}</p>
+                      <p><strong>Email:</strong> {user.email}</p>
+                      <p><strong>Телефон:</strong> {user.phone}</p>
+                      <p><strong>Сектор:</strong> {user.sector}</p>
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-3">
                   <button
                     onClick={handleCheckout}
-                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                    disabled={isProcessingOrder}
+                    className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
                   >
-                    Оформить заказ
+                    {isProcessingOrder ? (
+                      <div className="flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                        Оформление заказа...
+                      </div>
+                    ) : (
+                      'Оформить заказ'
+                    )}
                   </button>
                   
                   <Link
@@ -208,6 +328,13 @@ export const Cart = () => {
             </div>
           </div>
         )}
+
+        {/* Authentication Modal */}
+        <AuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onSuccess={handleAuthSuccess}
+        />
       </div>
     </div>
   );

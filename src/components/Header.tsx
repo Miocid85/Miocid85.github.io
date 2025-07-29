@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ShoppingCartIcon, MenuIcon, SearchIcon, UserIcon, XIcon, LogOutIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../contexts/CartContext';
+import { useAuth } from '../hooks/useAuth';
 import logo from '../logo.png';
 
 export const Header = () => {
@@ -10,10 +11,8 @@ export const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { getTotalItems, toggleCart } = useCart();
+  const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
-
-  // Mock user state - replace with real authentication
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +35,7 @@ export const Header = () => {
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    logout();
     setIsUserMenuOpen(false);
     navigate('/');
   };
@@ -139,11 +138,11 @@ export const Header = () => {
               
               {isUserMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                  {isLoggedIn ? (
+                  {isAuthenticated() && user ? (
                     <>
                       <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                        <p className="font-medium">Пользователь</p>
-                        <p className="text-gray-500">user@example.com</p>
+                        <p className="font-medium">{user.surname} {user.name}</p>
+                        <p className="text-gray-500">{user.email}</p>
                       </div>
                       <button
                         onClick={handleLogout}
@@ -209,7 +208,7 @@ export const Header = () => {
                 Проектирование
               </Link>
               <div className="border-t pt-3">
-                {isLoggedIn ? (
+                {isAuthenticated() && user ? (
                   <button
                     onClick={handleLogout}
                     className="text-gray-700 hover:text-sky-500 font-medium"
