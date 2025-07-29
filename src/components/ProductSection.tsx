@@ -19,7 +19,8 @@ export const ProductSection = () => {
   }));
 
   // Get unique categories for navigation with safety checks
-  const categories = Array.from(new Set((products1C || []).map(p => p.folder0).filter(Boolean)));
+  // Always include all categories, not just from filtered products
+  const allCategories = Array.from(new Set((products1C || []).map(p => p.folder0).filter(Boolean)));
 
   if (loading) {
     return (
@@ -63,7 +64,7 @@ export const ProductSection = () => {
 
         {/* Category Navigation */}
         <CategoryNav 
-          categories={categories}
+          categories={allCategories}
           selectedCategory={selectedCategory}
           onCategoryChange={setSelectedCategory}
         />

@@ -87,6 +87,8 @@ export const use1CProducts = (category?: string, limit?: number) => {
       const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
       const productNodes = xmlDoc.querySelectorAll('Product');
       
+      console.log(`Found ${productNodes.length} products in XML`);
+      
       const parsedProducts: ProductXML[] = Array.from(productNodes).map(node => {
         const getTextContent = (tagName: string) => {
           const element = node.querySelector(tagName);
@@ -106,15 +108,8 @@ export const use1CProducts = (category?: string, limit?: number) => {
         const folder4 = getTextContent('folder4');
         const folder5 = getTextContent('folder5');
 
-        // Handle image URL - if image exists, use it, otherwise use placeholder
-        let finalImageUrl = '';
-        if (imageUrl && imageUrl.trim()) {
-          // Check if image exists in img folder
-          finalImageUrl = `/product/img/${imageUrl}`;
-        } else {
-          // Use placeholder image
-          finalImageUrl = 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
-        }
+        // Always use placeholder image since XML has empty ImageUrl tags
+        const finalImageUrl = 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80';
 
         return {
           id,
@@ -132,9 +127,11 @@ export const use1CProducts = (category?: string, limit?: number) => {
         };
       });
 
+      console.log(`Parsed ${parsedProducts.length} products`);
+
       // Filter by category if specified
       let filteredProducts = parsedProducts;
-      if (category && category !== '') {
+      if (category && category !== 'Все товары' && category !== '') {
         filteredProducts = parsedProducts.filter(product => 
           product.folder0.toLowerCase().includes(category.toLowerCase()) ||
           product.folder1.toLowerCase().includes(category.toLowerCase()) ||
@@ -147,6 +144,7 @@ export const use1CProducts = (category?: string, limit?: number) => {
         filteredProducts = filteredProducts.slice(0, limit);
       }
 
+      console.log(`Filtered to ${filteredProducts.length} products`);
       setProducts(filteredProducts);
     } catch (err) {
       console.error('Error loading products:', err);
