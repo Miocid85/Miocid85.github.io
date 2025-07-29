@@ -6,13 +6,17 @@ import { ProductSection } from './components/ProductSection';
 import { Footer } from './components/Footer';
 import { ScrollToTop } from './components/ScrollToTop';
 import { ScrollToTopButton } from './components/ScrollToTopButton';
+import { ShoppingCart } from './components/ShoppingCart';
 import { About } from './pages/About';
 import Contact from './pages/Contact';
 import Delivery from './pages/Delivery';
 import Consultation from './pages/Consultation';
 import { Design } from './pages/Design';
+import { useCart } from './hooks/useCart';
 
 export function App() {
+  const { isCartOpen, toggleCart } = useCart();
+
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-screen bg-gray-50">
@@ -33,6 +37,7 @@ export function App() {
         </Routes>
         <Footer />
         <ScrollToTopButton />
+        <ShoppingCart isOpen={isCartOpen} onClose={toggleCart} />
       </div>
     </BrowserRouter>
   );

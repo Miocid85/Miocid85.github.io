@@ -1,5 +1,6 @@
 import React from 'react';
 import { ShoppingCartIcon, PackageIcon } from 'lucide-react';
+import { useCart } from '../hooks/useCart';
 
 export interface Product {
   id: number;
@@ -16,7 +17,20 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
   const isInStock = product.stock && product.stock > 0;
+  
+  const handleAddToCart = () => {
+    if (isInStock) {
+      addToCart({
+        id: product.id.toString(),
+        name: product.name,
+        price: product.price,
+        image: product.image,
+        stock: product.stock || 0
+      });
+    }
+  };
   
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
@@ -80,6 +94,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
           
           <button 
+            onClick={handleAddToCart}
             className={`p-3 rounded-full transition-all duration-200 ${
               isInStock 
                 ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-lg' 

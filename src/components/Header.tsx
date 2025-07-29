@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { ShoppingCartIcon, MenuIcon, SearchIcon, UserIcon, XIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../hooks/useCart';
 import logo from '../logo.png';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  return <header className="bg-white shadow-sm sticky top-0 z-50">
+  const { getTotalItems, toggleCart } = useCart();
+  
+  return (
+    <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between md:justify-start">
           {/* Mobile menu button */}
@@ -14,7 +18,7 @@ export const Header = () => {
           </button>
           {/* Logo - centered on mobile, left-aligned on desktop */}
           <div className="flex-1 flex justify-center md:justify-start items-center gap-3">
-            <img src={logo} alt="КубСантехОпт логотип" className="h-24 w-24 object-contain" />
+            <img src={logo as string} alt="КубСантехОпт логотип" className="h-24 w-24 object-contain" />
             <Link to="/" className="text-center md:text-left">
               <h1 className="text-2xl font-bold text-gray-700">КубСантехОпт</h1>
               <p className="text-xs text-gray-500">Отопительное оборудование</p>
@@ -46,16 +50,23 @@ export const Header = () => {
             <button aria-label="Account" className="p-1 hover:text-sky-500">
               <UserIcon size={20} />
             </button>
-            <button aria-label="Shopping cart" className="p-1 hover:text-sky-500 relative">
+            <button 
+              onClick={toggleCart}
+              aria-label="Shopping cart" 
+              className="p-1 hover:text-sky-500 relative"
+            >
               <ShoppingCartIcon size={20} />
-              <span className="absolute -top-1 -right-1 bg-sky-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
-                3
-              </span>
+              {getTotalItems() > 0 && (
+                <span className="absolute -top-1 -right-1 bg-sky-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {getTotalItems()}
+                </span>
+              )}
             </button>
           </div>
         </div>
         {/* Mobile menu */}
-        {isMenuOpen && <div className="md:hidden mt-4 pb-2">
+        {isMenuOpen && (
+          <div className="md:hidden mt-4 pb-2">
             <nav className="flex flex-col space-y-3">
               <Link to="/" className="text-gray-700 hover:text-sky-500 font-medium">
                 Каталог
@@ -73,7 +84,9 @@ export const Header = () => {
                 Проектирование
               </Link>
             </nav>
-          </div>}
+          </div>
+        )}
       </div>
-    </header>;
+    </header>
+  );
 };
