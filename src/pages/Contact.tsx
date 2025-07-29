@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { use1CCustomer } from '../hooks/use1CData';
 import { 
   Phone, 
   Mail, 
@@ -22,8 +21,8 @@ const Contact: React.FC = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
-  
-  const { createCustomer, loading, error } = use1CCustomer();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -35,15 +34,12 @@ const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError(null);
     
     try {
-      // Create customer in 1C
-      await createCustomer({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        company: formData.company || undefined
-      });
+      // Simulate form submission
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       setIsSubmitted(true);
       setFormData({
@@ -54,7 +50,10 @@ const Contact: React.FC = () => {
         message: ''
       });
     } catch (err) {
+      setError('Произошла ошибка при отправке формы. Попробуйте еще раз.');
       console.error('Failed to submit contact form:', err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -288,14 +287,14 @@ const Contact: React.FC = () => {
               
               <button 
                 className={`w-full py-4 px-6 rounded-lg font-medium transition-all duration-300 flex items-center justify-center gap-2 ${
-                  loading 
+                  isLoading 
                     ? 'bg-gray-400 cursor-not-allowed text-white' 
                     : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5'
                 }`} 
                 type="submit"
-                disabled={loading}
+                disabled={isLoading}
               >
-                {loading ? (
+                {isLoading ? (
                   <>
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     Отправка...

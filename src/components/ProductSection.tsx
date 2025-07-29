@@ -1,58 +1,94 @@
 import React, { useState } from 'react';
 import { CategoryNav } from './CategoryNav';
 import { ProductCard, Product } from './ProductCard';
-import { use1CProducts } from '../hooks/use1CData';
+import { use1CProducts, ProductXML } from '../hooks/use1CData';
 
 export const ProductSection = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory, 20);
+  const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory, 50);
 
-  // Convert 1C products to local Product format
-  const products: Product[] = products1C.map(product => ({
-    id: parseInt(product.id),
+  // Convert XML products to local Product format
+  const products: Product[] = products1C.map((product: ProductXML) => ({
+    id: parseInt(product.id.replace(/\D/g, '') || '0'), // Extract numbers from ID
     name: product.name,
-    description: product.description,
+    description: product.description || `${product.folder0} - ${product.folder1}`,
     price: product.price,
-    image: product.imageUrl || 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    category: product.category,
-    stock: product.stock
+    image: product.imageUrl,
+    category: product.folder0,
+    stock: product.quantity
   }));
-  return <section id="products" className="py-10 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold mb-8 text-center">Наши товары</h2>
-        <CategoryNav onCategoryChange={setSelectedCategory} />
-        
-        {loading && (
-          <div className="text-center py-8">
-            <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-sky-500"></div>
-            <p className="mt-2 text-gray-600">Загрузка товаров...</p>
+
+  // Get unique categories for navigation
+  const categories = Array.from(new Set(products1C.map(p => p.folder0).filter(Boolean)));
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
-        )}
-        
-        {error && (
-          <div className="text-center py-8">
-            <p className="text-red-600 mb-4">Ошибка загрузки товаров: {error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-red-600 mb-4">Ошибка загрузки товаров</h2>
+            <p className="text-gray-600 mb-4">{error}</p>
             <button 
               onClick={refetch}
-              className="bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-6 rounded-md"
+              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
               Попробовать снова
             </button>
           </div>
-        )}
-        
-        {!loading && !error && (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.map(product => <ProductCard key={product.id} product={product} />)}
-            </div>
-            <div className="mt-10 text-center">
-              <button className="bg-sky-500 hover:bg-sky-600 text-white font-medium py-2 px-6 rounded-md">
-                Показать больше товаров
-              </button>
-            </div>
-          </>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="container mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Каталог товаров</h1>
+          <p className="text-lg text-gray-600">Найдено товаров: {products.length}</p>
+        </div>
+
+        {/* Category Navigation */}
+        <CategoryNav 
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+        />
+
+        {/* Products Grid */}
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-8">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold text-gray-600 mb-2">
+              Товары не найдены
+            </h3>
+            <p className="text-gray-500">
+              {selectedCategory 
+                ? `В категории "${selectedCategory}" товары не найдены`
+                : 'Попробуйте выбрать другую категорию'
+              }
+            </p>
+          </div>
         )}
       </div>
-    </section>;
+    </div>
+  );
 };
