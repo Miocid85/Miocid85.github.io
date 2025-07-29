@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShoppingCartIcon, PackageIcon } from 'lucide-react';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../contexts/CartContext';
 
 export interface Product {
   id: number;

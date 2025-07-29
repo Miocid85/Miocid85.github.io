@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { SearchIcon, PackageIcon, FileTextIcon } from 'lucide-react';
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../contexts/CartContext';
 
 export const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();

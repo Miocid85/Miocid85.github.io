@@ -15,36 +15,44 @@ import { Design } from './pages/Design';
 import { Search } from './pages/Search';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
-import { useCart } from './hooks/useCart';
+import { CartProvider, useCart } from './contexts/CartContext';
 
-export function App() {
+function AppContent() {
   const { isCartOpen, toggleCart } = useCart();
 
   return (
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <ScrollToTop />
+      <Header />
+      <Routes>
+        <Route path="/" element={
+          <main className="flex-grow">
+            <Hero />
+            <ProductSection />
+          </main>
+        } />
+        <Route path="/about" element={<About />} />
+        <Route path="/delivery" element={<Delivery />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/consultation" element={<Consultation />} />
+        <Route path="/design" element={<Design />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+      <Footer />
+      <ScrollToTopButton />
+      <ShoppingCart isOpen={isCartOpen} onClose={toggleCart} />
+    </div>
+  );
+}
+
+export function App() {
+  return (
     <BrowserRouter>
-      <div className="flex flex-col min-h-screen bg-gray-50">
-        <ScrollToTop />
-        <Header />
-        <Routes>
-          <Route path="/" element={
-            <main className="flex-grow">
-              <Hero />
-              <ProductSection />
-            </main>
-          } />
-          <Route path="/about" element={<About />} />
-          <Route path="/delivery" element={<Delivery />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/consultation" element={<Consultation />} />
-          <Route path="/design" element={<Design />} />
-          <Route path="/search" element={<Search />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-        </Routes>
-        <Footer />
-        <ScrollToTopButton />
-        <ShoppingCart isOpen={isCartOpen} onClose={toggleCart} />
-      </div>
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </BrowserRouter>
   );
 }
