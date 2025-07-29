@@ -27,8 +27,8 @@ export const use1CProducts = (category?: string, limit?: number) => {
       
       console.log('Starting to fetch XML file...');
       
-      // Load XML file from local product directory
-      const response = await fetch('/product/product.xml');
+      // Use the correct base path for GitHub Pages
+      const response = await fetch('/Miocid85.github.io/product.xml');
       
       console.log('Fetch response status:', response.status);
       console.log('Fetch response ok:', response.ok);
