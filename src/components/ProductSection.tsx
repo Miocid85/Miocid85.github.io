@@ -5,7 +5,7 @@ import { use1CProducts, ProductXML } from '../hooks/use1CData';
 
 export const ProductSection = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
-  const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory, 50);
+  const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory);
 
   // Convert XML products to local Product format with safety checks
   const products: Product[] = (products1C || []).map((product: ProductXML) => ({
