@@ -1,13 +1,36 @@
 import React, { useState } from 'react';
 import { ShoppingCartIcon, MenuIcon, SearchIcon, UserIcon, XIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import logo from '../logo.png';
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const { getTotalItems, toggleCart } = useCart();
-  
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const handleSearchClick = () => {
+    setIsSearchOpen(true);
+    // Focus the search input after a short delay
+    setTimeout(() => {
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }, 100);
+  };
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -44,9 +67,46 @@ export const Header = () => {
           </nav>
           {/* Icons */}
           <div className="flex items-center space-x-4">
-            <button aria-label="Search" className="p-1 hover:text-sky-500">
-              <SearchIcon size={20} />
-            </button>
+            {/* Search */}
+            <div className="relative">
+              {isSearchOpen ? (
+                <form onSubmit={handleSearch} className="flex items-center">
+                  <input
+                    id="search-input"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Поиск товаров..."
+                    className="w-64 px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-r-md hover:bg-blue-700 transition-colors"
+                  >
+                    <SearchIcon size={16} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="ml-2 text-gray-400 hover:text-gray-600"
+                  >
+                    <XIcon size={16} />
+                  </button>
+                </form>
+              ) : (
+                <button
+                  onClick={handleSearchClick}
+                  aria-label="Search"
+                  className="p-1 hover:text-sky-500"
+                >
+                  <SearchIcon size={20} />
+                </button>
+              )}
+            </div>
+            
             <button aria-label="Account" className="p-1 hover:text-sky-500">
               <UserIcon size={20} />
             </button>

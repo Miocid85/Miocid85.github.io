@@ -12,6 +12,7 @@ import Contact from './pages/Contact';
 import Delivery from './pages/Delivery';
 import Consultation from './pages/Consultation';
 import { Design } from './pages/Design';
+import { Search } from './pages/Search';
 import { useCart } from './hooks/useCart';
 
 export function App() {
@@ -34,6 +35,7 @@ export function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/consultation" element={<Consultation />} />
           <Route path="/design" element={<Design />} />
+          <Route path="/search" element={<Search />} />
         </Routes>
         <Footer />
         <ScrollToTopButton />
