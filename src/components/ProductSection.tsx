@@ -7,19 +7,19 @@ export const ProductSection = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const { products: products1C, loading, error, refetch } = use1CProducts(selectedCategory, 50);
 
-  // Convert XML products to local Product format
-  const products: Product[] = products1C.map((product: ProductXML) => ({
+  // Convert XML products to local Product format with safety checks
+  const products: Product[] = (products1C || []).map((product: ProductXML) => ({
     id: parseInt(product.id.replace(/\D/g, '') || '0'), // Extract numbers from ID
-    name: product.name,
-    description: product.description || `${product.folder0} - ${product.folder1}`,
-    price: product.price,
-    image: product.imageUrl,
-    category: product.folder0,
-    stock: product.quantity
+    name: product.name || 'Товар без названия',
+    description: product.description || `${product.folder0 || ''} - ${product.folder1 || ''}`,
+    price: product.price || 0,
+    image: product.imageUrl || 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+    category: product.folder0 || 'Без категории',
+    stock: product.quantity || 0
   }));
 
-  // Get unique categories for navigation
-  const categories = Array.from(new Set(products1C.map(p => p.folder0).filter(Boolean)));
+  // Get unique categories for navigation with safety checks
+  const categories = Array.from(new Set((products1C || []).map(p => p.folder0).filter(Boolean)));
 
   if (loading) {
     return (
