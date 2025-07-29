@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ShoppingCartIcon, MenuIcon, SearchIcon, UserIcon, XIcon } from 'lucide-react';
+import { ShoppingCartIcon, MenuIcon, SearchIcon, UserIcon, XIcon, LogOutIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../hooks/useCart';
 import logo from '../logo.png';
@@ -8,8 +8,12 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { getTotalItems, toggleCart } = useCart();
   const navigate = useNavigate();
+
+  // Mock user state - replace with real authentication
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +33,12 @@ export const Header = () => {
         searchInput.focus();
       }
     }, 100);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    setIsUserMenuOpen(false);
+    navigate('/');
   };
 
   return (
@@ -107,9 +117,54 @@ export const Header = () => {
               )}
             </div>
             
-            <button aria-label="Account" className="p-1 hover:text-sky-500">
-              <UserIcon size={20} />
-            </button>
+            {/* User Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                aria-label="Account"
+                className="p-1 hover:text-sky-500"
+              >
+                <UserIcon size={20} />
+              </button>
+              
+              {isUserMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
+                  {isLoggedIn ? (
+                    <>
+                      <div className="px-4 py-2 text-sm text-gray-700 border-b">
+                        <p className="font-medium">Пользователь</p>
+                        <p className="text-gray-500">user@example.com</p>
+                      </div>
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+                      >
+                        <LogOutIcon size={16} className="mr-2" />
+                        Выйти
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <Link
+                        to="/login"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        Войти
+                      </Link>
+                      <Link
+                        to="/signup"
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        onClick={() => setIsUserMenuOpen(false)}
+                      >
+                        Зарегистрироваться
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+            
             <button 
               onClick={toggleCart}
               aria-label="Shopping cart" 
@@ -143,6 +198,25 @@ export const Header = () => {
               <Link to="/design" className="text-gray-700 hover:text-sky-500 font-medium">
                 Проектирование
               </Link>
+              <div className="border-t pt-3">
+                {isLoggedIn ? (
+                  <button
+                    onClick={handleLogout}
+                    className="text-gray-700 hover:text-sky-500 font-medium"
+                  >
+                    Выйти
+                  </button>
+                ) : (
+                  <>
+                    <Link to="/login" className="block text-gray-700 hover:text-sky-500 font-medium mb-2">
+                      Войти
+                    </Link>
+                    <Link to="/signup" className="block text-gray-700 hover:text-sky-500 font-medium">
+                      Зарегистрироваться
+                    </Link>
+                  </>
+                )}
+              </div>
             </nav>
           </div>
         )}

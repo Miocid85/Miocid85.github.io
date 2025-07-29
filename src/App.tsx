@@ -13,6 +13,8 @@ import Delivery from './pages/Delivery';
 import Consultation from './pages/Consultation';
 import { Design } from './pages/Design';
 import { Search } from './pages/Search';
+import { Login } from './pages/Login';
+import { SignUp } from './pages/SignUp';
 import { useCart } from './hooks/useCart';
 
 export function App() {
@@ -36,6 +38,8 @@ export function App() {
           <Route path="/consultation" element={<Consultation />} />
           <Route path="/design" element={<Design />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
         </Routes>
         <Footer />
         <ScrollToTopButton />
