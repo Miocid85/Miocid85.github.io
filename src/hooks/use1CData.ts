@@ -24,9 +24,62 @@ export const use1CProducts = (category?: string, limit?: number) => {
     try {
       setLoading(true);
       setError(null);
+      
       // Load XML file from local product directory
       const response = await fetch('/product/product.xml');
-      if (!response.ok) throw new Error('Ошибка загрузки XML');
+      
+      if (!response.ok) {
+        console.warn('XML file not found, using fallback data');
+        // Use fallback data if XML fails to load
+        const fallbackProducts: ProductXML[] = [
+          {
+            id: '1',
+            name: 'Котел отопления BAXI',
+            price: 35000,
+            quantity: 12,
+            imageUrl: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            description: 'Современный котел отопления',
+            folder0: 'Котлы и бойлеры',
+            folder1: 'Газовые котлы',
+            folder2: 'BAXI',
+            folder3: '',
+            folder4: '',
+            folder5: ''
+          },
+          {
+            id: '2',
+            name: 'Радиатор алюминиевый RIFAR',
+            price: 4200,
+            quantity: 34,
+            imageUrl: 'https://images.unsplash.com/photo-1509599589979-3b5a15d2816e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            description: 'Эффективный радиатор отопления',
+            folder0: 'Греющие Элементы',
+            folder1: 'Радиаторы',
+            folder2: 'RIFAR',
+            folder3: '',
+            folder4: '',
+            folder5: ''
+          }
+        ];
+        
+        let filteredProducts = fallbackProducts;
+        if (category && category !== '') {
+          filteredProducts = fallbackProducts.filter(product => 
+            product.folder0.toLowerCase().includes(category.toLowerCase()) ||
+            product.folder1.toLowerCase().includes(category.toLowerCase()) ||
+            product.folder2.toLowerCase().includes(category.toLowerCase())
+          );
+        }
+        
+        if (limit) {
+          filteredProducts = filteredProducts.slice(0, limit);
+        }
+        
+        setProducts(filteredProducts);
+        setLoading(false);
+        return;
+      }
+      
       const xmlText = await response.text();
       
       // Parse XML
@@ -96,8 +149,27 @@ export const use1CProducts = (category?: string, limit?: number) => {
 
       setProducts(filteredProducts);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
       console.error('Error loading products:', err);
+      setError(err instanceof Error ? err.message : 'Неизвестная ошибка');
+      
+      // Set fallback products even on error
+      const fallbackProducts: ProductXML[] = [
+        {
+          id: '1',
+          name: 'Котел отопления BAXI',
+          price: 35000,
+          quantity: 12,
+          imageUrl: 'https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+          description: 'Современный котел отопления',
+          folder0: 'Котлы и бойлеры',
+          folder1: 'Газовые котлы',
+          folder2: 'BAXI',
+          folder3: '',
+          folder4: '',
+          folder5: ''
+        }
+      ];
+      setProducts(fallbackProducts);
     } finally {
       setLoading(false);
     }
