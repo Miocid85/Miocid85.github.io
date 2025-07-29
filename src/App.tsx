@@ -15,6 +15,7 @@ import { Design } from './pages/Design';
 import { Search } from './pages/Search';
 import { Login } from './pages/Login';
 import { SignUp } from './pages/SignUp';
+import { Cart } from './pages/Cart';
 import { CartProvider, useCart } from './contexts/CartContext';
 
 function AppContent() {
@@ -39,6 +40,7 @@ function AppContent() {
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/cart" element={<Cart />} />
       </Routes>
       <Footer />
       <ScrollToTopButton />

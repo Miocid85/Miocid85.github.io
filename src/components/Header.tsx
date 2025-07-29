@@ -41,6 +41,16 @@ export const Header = () => {
     navigate('/');
   };
 
+  const handleCartClick = () => {
+    if (getTotalItems() > 0) {
+      // If cart has items, go to cart page
+      navigate('/cart');
+    } else {
+      // If cart is empty, open cart sidebar
+      toggleCart();
+    }
+  };
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
@@ -166,7 +176,7 @@ export const Header = () => {
             </div>
             
             <button 
-              onClick={toggleCart}
+              onClick={handleCartClick}
               aria-label="Shopping cart" 
               className="p-1 hover:text-sky-500 relative"
             >
